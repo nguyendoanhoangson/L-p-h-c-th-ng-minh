@@ -1,0 +1,128 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role and contact information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 150 },
+        "email": { "type": "string", "maxLength": 200 },
+        "role": { "type": "string", "enum": ["ADMIN", "TEACHER", "STUDENT", "PARENT"] },
+        "avatar": { "type": "string", "maxLength": 500 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "schoolId": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Classroom": {
+      "title": "Classroom",
+      "description": "Classroom entity managed by teachers and admins",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 100 },
+        "gradeLevel": { "type": "number" },
+        "academicYear": { "type": "string", "maxLength": 50 },
+        "room": { "type": "string", "maxLength": 50 },
+        "teacherId": { "type": "string", "maxLength": 128 },
+        "teacherName": { "type": "string", "maxLength": 150 },
+        "studentCount": { "type": "number" },
+        "maxStudents": { "type": "number" },
+        "status": { "type": "string", "enum": ["ACTIVE", "ARCHIVED"] },
+        "description": { "type": "string", "maxLength": 500 }
+      },
+      "required": ["id", "name", "gradeLevel", "academicYear", "teacherId", "teacherName", "status"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Student roster profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "studentCode": { "type": "string", "maxLength": 50 },
+        "fullName": { "type": "string", "maxLength": 150 },
+        "dob": { "type": "string", "maxLength": 20 },
+        "gender": { "type": "string", "enum": ["Nam", "Nữ"] },
+        "classId": { "type": "string", "maxLength": 128 },
+        "className": { "type": "string", "maxLength": 100 },
+        "gradeLevel": { "type": "number" },
+        "status": { "type": "string", "enum": ["STUDYING", "SUSPENDED", "TRANSFERRED", "DROPPED"] },
+        "createdAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "studentCode", "fullName", "classId", "className", "gradeLevel", "status"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Class attendance records per period or day",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "classId": { "type": "string", "maxLength": 128 },
+        "studentId": { "type": "string", "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 150 },
+        "date": { "type": "string", "maxLength": 20 },
+        "period": { "type": "number" },
+        "status": { "type": "string", "enum": ["PRESENT", "EXCUSED_ABSENCE", "UNEXCUSED_ABSENCE", "LATE", "EARLY_LEAVE"] },
+        "recordedBy": { "type": "string", "maxLength": 150 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "classId", "studentId", "studentName", "date", "period", "status", "recordedBy"]
+    },
+    "Timetable": {
+      "title": "Timetable",
+      "description": "Timetable schedules for classes and teachers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "enum": ["CLASS", "TEACHER", "ROOM"] },
+        "targetId": { "type": "string", "maxLength": 128 },
+        "targetName": { "type": "string", "maxLength": 150 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["id", "type", "targetId", "targetName"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "School wide or class announcements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 250 },
+        "content": { "type": "string", "maxLength": 2000 },
+        "targetRole": { "type": "string", "enum": ["ALL", "STUDENT", "PARENT", "TEACHER"] },
+        "priority": { "type": "string", "enum": ["NORMAL", "IMPORTANT", "URGENT"] },
+        "authorName": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "readCount": { "type": "number" }
+      },
+      "required": ["id", "title", "content", "targetRole", "priority", "authorName", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Registered user accounts and profiles"
+    },
+    "/classes/{classId}": {
+      "schema": "Classroom",
+      "description": "Active classrooms list"
+    },
+    "/students/{studentId}": {
+      "schema": "Student",
+      "description": "Class roster students"
+    },
+    "/attendance/{recordId}": {
+      "schema": "AttendanceRecord",
+      "description": "Class attendance records"
+    },
+    "/timetables/{timetableId}": {
+      "schema": "Timetable",
+      "description": "Class and school timetables"
+    },
+    "/announcements/{announcementId}": {
+      "schema": "Announcement",
+      "description": "School notifications and announcements"
+    }
+  }
+}
